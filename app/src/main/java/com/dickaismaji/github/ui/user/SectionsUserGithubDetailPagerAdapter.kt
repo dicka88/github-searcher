@@ -1,10 +1,9 @@
-package com.dickaismaji.github.adapters
+package com.dickaismaji.github.ui.user
 
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.dickaismaji.github.ui.user.UserGithubFollowerFragment
-import com.dickaismaji.github.ui.user.UserGithubFollowingFragment
 
 class SectionsUserGithubDetailPagerAdapter(activity: AppCompatActivity): FragmentStateAdapter(activity) {
   var username: String = ""
@@ -13,13 +12,23 @@ class SectionsUserGithubDetailPagerAdapter(activity: AppCompatActivity): Fragmen
 
   override fun createFragment(position: Int): Fragment {
     var fragment: Fragment? = null
+    val mBundle = Bundle()
 
-    fragment = when(position) {
-      0 -> UserGithubFollowingFragment(username)
-      1 -> UserGithubFollowerFragment(username)
-      else -> UserGithubFollowingFragment(username)
+    when(position) {
+      0 ->  {
+        val userGithubFollowingFragment = UserGithubFollowingFragment()
+        mBundle.putString(UserGithubFollowingFragment.EXTRA_USERNAME, username)
+        userGithubFollowingFragment.arguments = mBundle
+        fragment = userGithubFollowingFragment
+      }
+      1 -> {
+        val userGithubFollowerFragment = UserGithubFollowerFragment()
+        mBundle.putString(UserGithubFollowerFragment.EXTRA_USERNAME, username)
+        userGithubFollowerFragment.arguments = mBundle
+        fragment = userGithubFollowerFragment
+      }
     }
 
-    return fragment
+    return fragment as Fragment
   }
 }

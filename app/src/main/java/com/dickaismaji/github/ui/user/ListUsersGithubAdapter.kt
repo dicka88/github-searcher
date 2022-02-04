@@ -1,4 +1,4 @@
-package com.dickaismaji.github.adapters
+package com.dickaismaji.github.ui.user
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

@@ -1,60 +1,70 @@
 package com.dickaismaji.github.ui.user
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.dickaismaji.github.R
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.dickaismaji.github.databinding.FragmentUserGithubFollowingBinding
+import com.dickaismaji.github.models.response.search.user.UserItem
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class UserGithubFollowingFragment: Fragment() {
+  private var binding: FragmentUserGithubFollowingBinding? = null
+  private val viewModel: UserGithubViewModel by viewModels()
 
-/**
- * A simple [Fragment] subclass.
- * Use the [UserGithubFollowingFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class UserGithubFollowingFragment : Fragment() {
-  // TODO: Rename and change types of parameters
-  private var param1: String? = null
-  private var param2: String? = null
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    arguments?.let {
-      param1 = it.getString(ARG_PARAM1)
-      param2 = it.getString(ARG_PARAM2)
-    }
-  }
+  var username: String? = ""
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
-    // Inflate the layout for this fragment
-    return inflater.inflate(R.layout.fragment_user_github_following, container, false)
+  ): View {
+    binding = FragmentUserGithubFollowingBinding.inflate(inflater, container, false)
+    username = arguments?.getString(EXTRA_USERNAME)
+
+    return binding!!.root
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    viewModel.getFollowings(username!!)
+
+    viewModel.userFollowings.observe(this, { users ->
+      setUserFollowings(users)
+    })
+
+    viewModel.isUserFollowingLoading.observe(this, { isLoading ->
+      binding?.progressBar?.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
+    })
+  }
+
+  private fun setUserFollowings(users: List<UserItem>) {
+    if(users.isEmpty()) {
+      binding?.notFoundView?.visibility = View.VISIBLE
+    } else {
+      binding?.notFoundView?.visibility = View.INVISIBLE
+    }
+
+    val listUserGithubAdapter = ListUsersGithubAdapter(users)
+    binding?.rvUserList?.apply {
+      layoutManager = LinearLayoutManager(activity)
+      adapter = listUserGithubAdapter
+    }
+
+    listUserGithubAdapter.setItemOnClickCallback(object: ListUsersGithubAdapter.OnItemClickCallback {
+      override fun onItemClicked(data: UserItem) {
+        val username = data.login
+        startActivity(Intent(activity, UserGithubDetailActivity::class.java).apply {
+          putExtra(UserGithubDetailActivity.EXTRA_USERNAME, username)
+        })
+      }
+    })
   }
 
   companion object {
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserGithubFollowingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    @JvmStatic
-    fun newInstance(param1: String, param2: String) =
-      UserGithubFollowingFragment().apply {
-        arguments = Bundle().apply {
-          putString(ARG_PARAM1, param1)
-          putString(ARG_PARAM2, param2)
-        }
-      }
+    const val EXTRA_USERNAME = "username"
   }
 }

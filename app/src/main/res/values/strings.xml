@@ -1,0 +1,26 @@
+<resources>
+  <string name="app_name">Github Searcher</string>
+  <string name="github_username">dicka88</string>
+  <string name="user_greetings">Hi Dicka Ismaji</string>
+  <string name="head_tagline_friend">Friends</string>
+  <string name="followers">Followers</string>
+  <string name="following">Following</string>
+  <string name="repository">Repository</string>
+  <string name="star">Star</string>
+  <string name="share">Share</string>
+  <string name="view_browser">View in browser</string>
+  <string name="search">Search</string>
+  <string name="tab_follower">Followers</string>
+  <string name="tab_following">Followings</string>
+  <string name="user_is_not_found">User is not found</string>
+  <string name="user_not_have_any_follower">No have any follower</string>
+  <string name="user_is_not_yet_following_others">Not yet following others</string>
+  <string name="photo_profile">Photo Profile</string>
+  <string name="github_icon">Github Icon</string>
+  <string name="username_template">/@%1$s</string>
+  <string name="dots_placeholder">.....</string>
+  <string name="favorite">Favorite</string>
+  <string name="favorite_user">"Favorite User"</string>
+  <string name="setting">Setting</string>
+  <string name="dark_mode">Dark Mode</string>
+</resources>
